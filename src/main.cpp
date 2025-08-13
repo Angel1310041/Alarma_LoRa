@@ -11,7 +11,7 @@
 #include "freertos/queue.h"
 
 SX1262 lora = new Module(LORA_CS, LORA_DIO1, LORA_RST, LORA_BUSY);
-String Version = "1.1.1.1";
+String Version = "4.2.1.1";
 volatile bool receivedFlag = false;
 bool modoProgramacion = false;
 
@@ -38,6 +38,8 @@ typedef struct {
     String valorAleatorio;
 } LoraTxMsg;
 QueueHandle_t loraTxQueue = NULL;
+
+
 
 void imprimirSerial(String mensaje, char color) {
   String colorCode;
@@ -324,8 +326,8 @@ void setup() {
         imprimirSerial("LoRa init failed!", 'r'); mostrarError("LoRa init failed!"); while (true);
     }
     lora.setOutputPower(17);      
-    lora.setSpreadingFactor(7);   // Mayor velocidad, menor alcance
-    lora.setBandwidth(250.0);     
+    lora.setSpreadingFactor(12);   // Mayor velocidad, menor alcance
+    lora.setBandwidth(125.0);     
     lora.setCodingRate(7);
     lora.setDio1Action(setFlag);
     lora.startReceive();
@@ -403,17 +405,5 @@ void setup() {
 void loop() {
     vTaskDelay(100 / portTICK_PERIOD_MS);
     modoprogporbotonfisico();
-
-    if (io1TimerActive && (millis() - io1TimerStart >= IO_TIMEOUT_MS)) {
-        digitalWrite(PIN_IO1, LOW);
-        io1TimerActive = false;
-        io1TimerStart = 0;
-        imprimirSerial("PIN_IO1 apagado automáticamente tras 5 minutos.", 'y');
+    ManejoComunicacion::gestionarTimersSalidas();
     }
-    if (io2TimerActive && (millis() - io2TimerStart >= IO_TIMEOUT_MS)) {
-        digitalWrite(PIN_IO2, LOW);
-        io2TimerActive = false;
-        io2TimerStart = 0;
-        imprimirSerial("PIN_IO2 apagado automáticamente tras 5 minutos.", 'y');
-    }
-}

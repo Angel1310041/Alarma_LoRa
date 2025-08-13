@@ -20,6 +20,7 @@ static Activacion activaciones[2] = {
       static String leerSerial();
       static String leerVecinal();
       static void initUART();
+      static void gestionarTimersSalidas(); 
       static void escribirVecinal(String envioVecinal);
       static void procesarComando(const String &comandoRecibido, const String &idOrigen);
       static void envioMsjLoRa(String comandoLoRa, const String& destino);
